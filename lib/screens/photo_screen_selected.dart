@@ -21,6 +21,7 @@ class PhotoScreen extends StatelessWidget {
             child: Align(
               alignment: Alignment.bottomRight,
               child: FloatingActionButton(
+                //Кнопка поделиться работает
                 onPressed: () {
                   Share.share(imagePath, subject: 'Just take a look at this!');
                 },

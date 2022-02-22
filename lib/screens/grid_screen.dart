@@ -2,8 +2,8 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 
 import 'package:photos_app_ldr_v2/screens/photo_screen_selected.dart';
-import 'package:photos_app_ldr_v2/servises/fetch_photos_list.dart';
-import 'package:photos_app_ldr_v2/servises/precash_img.dart';
+import 'package:photos_app_ldr_v2/services/fetch_photos_list.dart';
+import 'package:photos_app_ldr_v2/services/precash_img.dart';
 
 class GridScreenPhotos extends StatefulWidget {
   const GridScreenPhotos({Key? key}) : super(key: key);
@@ -26,10 +26,10 @@ class _GridScreenPhotosState extends State<GridScreenPhotos> {
     });
     print(pht.length);
 
+    //кешируем фотки
     await Future.wait(
         pht.map((photo) => PreCacheUtil.cacheImages(context, photo)).toList());
 
-    //await Future.delayed(const Duration(seconds: 2));
     setState(() {
       isFirstLoading = false;
     });
@@ -48,7 +48,6 @@ class _GridScreenPhotosState extends State<GridScreenPhotos> {
 
       if (_itemsForNow != pht.length) {
         _itemsForNow += 10;
-        print('_items++');
       } else {
         endOfStory = true;
       }
@@ -80,7 +79,7 @@ class _GridScreenPhotosState extends State<GridScreenPhotos> {
               : GridView.builder(
                   physics: const NeverScrollableScrollPhysics(),
                   shrinkWrap: true,
-                  itemCount: _itemsForNow, //_itemsForNow,
+                  itemCount: _itemsForNow,
                   gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
                       crossAxisCount: 3,
                       mainAxisSpacing: 8,
@@ -106,17 +105,18 @@ class _GridScreenPhotosState extends State<GridScreenPhotos> {
               padding: EdgeInsets.all(10.0),
               child: CircularProgressIndicator(),
             ),
-          Container(
-            height: 60,
-          ),
           if (endOfStory)
             const Padding(
-              padding: EdgeInsets.all(8.0),
-              child: Center(
-                  child: SizedBox(
-                      height: 40,
-                      child: Material(child: Text('End Of Story :((')))),
-            )
+              padding: EdgeInsets.all(10.0),
+              child: Text(
+                'End of Story :((',
+                style: TextStyle(fontSize: 38),
+              ),
+            ),
+          Container(
+            // `Маленький контейнер для красоты, чтобы было куда покрутить
+            height: 60,
+          ),
         ],
       ),
     );
